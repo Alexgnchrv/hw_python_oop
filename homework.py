@@ -54,11 +54,11 @@ class Training:
                            self.duration_hours,
                            self.get_distance(),
                            self.get_mean_speed(),
-                           self.get_spent_calories()
+                           self.get_spent_calories(),
                            )
 
     def __str__(self) -> str:
-        return f'{self.__class__.__name__}'
+        return self.__class__.__name__
 
 
 class Running(Training):
@@ -71,7 +71,8 @@ class Running(Training):
             (self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
              + self.CALORIES_MEAN_SPEED_SHIFT)
             * self.weight_kg / self.M_IN_KM
-            * (self.duration_hours * self.M_IN_H))
+            * (self.duration_hours * self.M_IN_H)
+        )
 
 
 class SportsWalking(Training):
@@ -125,15 +126,15 @@ class Swimming(Training):
                 * self.SPEED_ROOT * self.weight_kg * self.duration_hours)
 
 
-def read_package(workout_type: str, data: list[int]) -> Training:
+def read_package(workout_type: str, data: list[float]) -> Training:
     """Прочитать данные полученные от датчиков."""
     codes: dict[str, type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
-        'WLK': SportsWalking
+        'WLK': SportsWalking,
     }
-    if workout_type not in codes.keys():
-        raise Exception('Такого типа упражнений нет в словаре')
+    if workout_type not in codes:
+        raise Exception(f'Упражнения типа {workout_type} нет в словаре')
     return codes[workout_type](*data)
 
 
